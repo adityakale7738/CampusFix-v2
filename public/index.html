@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusFix — Campus Complaint Management</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="/css/style.css" rel="stylesheet">
+</head>
+<body class="auth-body">
+
+<div class="auth-wrap">
+  <!-- LEFT PANEL -->
+  <div class="auth-left">
+    <div class="auth-left-inner">
+      <div class="brand-logo">
+        <div class="brand-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M6 17L10 8l4 6 2.5-3.5 1.5 2.5"/></svg></div>
+        <span class="brand-name">CampusFix</span>
+      </div>
+      <div class="illus-wrap">
+        <div class="blob"></div>
+        <svg class="illus-svg" viewBox="0 0 300 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="65" y="152" width="170" height="96" rx="7" fill="#2c3e7a"/>
+          <rect x="73" y="159" width="154" height="80" rx="4" fill="#1a73e8"/>
+          <rect x="83" y="167" width="86" height="7" rx="3" fill="rgba(255,255,255,.3)"/>
+          <rect x="83" y="180" width="60" height="5" rx="2" fill="rgba(255,255,255,.2)"/>
+          <rect x="83" y="191" width="104" height="5" rx="2" fill="rgba(255,255,255,.2)"/>
+          <rect x="83" y="202" width="74" height="5" rx="2" fill="rgba(255,255,255,.2)"/>
+          <rect x="48" y="246" width="204" height="6" rx="3" fill="#1a1f4b"/>
+          <ellipse cx="150" cy="135" rx="24" ry="30" fill="#2d4a8a"/>
+          <circle cx="150" cy="90" r="22" fill="#f4c5a0"/>
+          <path d="M128 84Q130 66 150 64Q170 66 172 84Q170 72 150 70Q130 72 128 84Z" fill="#2c2c2c"/>
+          <path d="M168 124Q192 111 216 100" stroke="#2d4a8a" stroke-width="10" stroke-linecap="round"/>
+          <circle cx="218" cy="99" r="7" fill="#f4c5a0"/>
+          <circle cx="76" cy="78" r="26" fill="#e8f0fe" stroke="#1a73e8" stroke-width="2"/>
+          <circle cx="76" cy="68" r="10" fill="#f4c5a0"/>
+          <ellipse cx="76" cy="91" rx="12" ry="8" fill="#e74c3c"/>
+          <path d="M66 67Q68 57 76 56Q84 57 86 67Q84 60 76 59Q68 60 66 67Z" fill="#1a1a2e"/>
+          <circle cx="226" cy="68" r="26" fill="#e8f4fd" stroke="#1a73e8" stroke-width="2"/>
+          <circle cx="226" cy="58" r="10" fill="#f4c5a0"/>
+          <ellipse cx="226" cy="81" rx="12" ry="8" fill="#2c3e7a"/>
+          <path d="M216 55Q218 45 226 44Q234 45 236 55Q234 48 226 47Q218 48 216 55Z" fill="#4a3728"/>
+          <circle cx="152" cy="218" r="22" fill="#fef9e7" stroke="#f39c12" stroke-width="2"/>
+          <circle cx="152" cy="208" r="9" fill="#f4c5a0"/>
+          <ellipse cx="152" cy="230" rx="10" ry="7" fill="#e67e22"/>
+          <line x1="99" y1="90" x2="130" y2="114" stroke="#1a73e8" stroke-width="1.5" stroke-dasharray="4 3" opacity=".5"/>
+          <line x1="202" y1="80" x2="176" y2="112" stroke="#1a73e8" stroke-width="1.5" stroke-dasharray="4 3" opacity=".5"/>
+          <line x1="152" y1="196" x2="151" y2="172" stroke="#f39c12" stroke-width="1.5" stroke-dasharray="4 3" opacity=".5"/>
+          <rect x="24" y="116" width="48" height="16" rx="8" fill="#fff8e1"/>
+          <text x="48" y="128" text-anchor="middle" font-size="7" fill="#e65100" font-family="Poppins" font-weight="700">Pending</text>
+          <rect x="228" y="116" width="52" height="16" rx="8" fill="#e8f5e9"/>
+          <text x="254" y="128" text-anchor="middle" font-size="7" fill="#0f9d58" font-family="Poppins" font-weight="700">Resolved</text>
+        </svg>
+      </div>
+      <div class="auth-stats">
+        <div class="a-stat"><strong>500+</strong><span>Resolved</span></div>
+        <div class="a-div"></div>
+        <div class="a-stat"><strong>48h</strong><span>Avg Time</span></div>
+        <div class="a-div"></div>
+        <div class="a-stat"><strong>6</strong><span>Categories</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="auth-right">
+    <div class="auth-form">
+      <div class="tab-group">
+        <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">Login</button>
+        <button class="tab-btn" id="tab-reg" onclick="switchTab('register')">Sign Up</button>
+      </div>
+
+      <!-- LOGIN -->
+      <div id="form-login" class="f-section">
+        <h2 class="f-title">Welcome back 👋</h2>
+        <p class="f-sub">Sign in to your CampusFix account</p>
+        <div id="login-err" class="cf-alert hidden"></div>
+        <div class="cf-f">
+          <label class="cf-lbl">Email Address</label>
+          <div class="cf-wrap">
+            <span class="cf-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg></span>
+            <input type="email" id="login-email" class="cf-in" placeholder="your@college.edu" autocomplete="email">
+          </div>
+        </div>
+        <div class="cf-f">
+          <label class="cf-lbl">Password</label>
+          <div class="cf-wrap">
+            <span class="cf-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+            <input type="password" id="login-pass" class="cf-in" placeholder="••••••••">
+            <button class="cf-eye" type="button" onclick="togglePw('login-pass',this)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          </div>
+        </div>
+        <div class="cf-row">
+          <label class="cf-ck-lbl"><input type="checkbox" class="cf-ck"> Remember me</label>
+          <a href="#" class="cf-link">Forgot Password?</a>
+        </div>
+        <button class="cf-btn" id="login-btn" onclick="handleLogin()">
+          <span>Login</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <div class="cf-div"><span>Or login with</span></div>
+        <div class="soc-row">
+          <button class="soc-btn" onclick="socialLogin('Google')"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg><span>Google</span></button>
+          <button class="soc-btn" onclick="socialLogin('Facebook')"><svg width="16" height="16" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg><span>Facebook</span></button>
+          <button class="soc-btn" onclick="socialLogin('Twitter')"><svg width="16" height="16" viewBox="0 0 24 24" fill="#1DA1F2"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg><span>Twitter</span></button>
+        </div>
+        <p class="f-footer">Don't have an account? <a href="#" class="cf-link" style="font-weight:800" onclick="switchTab('register')">Sign Up</a></p>
+        <div class="admin-hint"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg> Admin: <code>admin@campusfix.edu</code> / <code>admin123</code></div>
+      </div>
+
+      <!-- REGISTER -->
+      <div id="form-register" class="f-section hidden">
+        <h2 class="f-title">Create account 🎓</h2>
+        <p class="f-sub">Join CampusFix as a student</p>
+        <div id="reg-err" class="cf-alert hidden"></div>
+        <div class="cf-2">
+          <div class="cf-f">
+            <label class="cf-lbl">Full Name</label>
+            <div class="cf-wrap"><span class="cf-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><input type="text" id="reg-name" class="cf-in" placeholder="Aditya Kale"></div>
+          </div>
+          <div class="cf-f">
+            <label class="cf-lbl">Roll Number</label>
+            <div class="cf-wrap"><span class="cf-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span><input type="text" id="reg-roll" class="cf-in" placeholder="CS2021001"></div>
+          </div>
+        </div>
+        <div class="cf-f">
+          <label class="cf-lbl">Email Address</label>
+          <div class="cf-wrap"><span class="cf-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg></span><input type="email" id="reg-email" class="cf-in" placeholder="your@college.edu"></div>
+        </div>
+        <div class="cf-2">
+          <div class="cf-f">
+            <label class="cf-lbl">Department</label>
+            <div class="cf-wrap"><span class="cf-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span><select id="reg-dept" class="cf-in cf-sel"><option value="">Select...</option><option>Computer Science</option><option>Information Technology</option><option>Electronics</option><option>Mechanical</option><option>Civil</option><option>MBA</option></select></div>
+          </div>
+          <div class="cf-f">
+            <label class="cf-lbl">Phone</label>
+            <div class="cf-wrap"><span class="cf-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.6a19.79 19.79 0 0 1-3.09-8.63A2 2 0 0 1 3.6 1.99h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.46A16 16 0 0 0 13.54 15.09l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.28 16.28"/></svg></span><input type="text" id="reg-phone" class="cf-in" placeholder="9876543210"></div>
+          </div>
+        </div>
+        <div class="cf-f">
+          <label class="cf-lbl">Password</label>
+          <div class="cf-wrap"><span class="cf-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span><input type="password" id="reg-pass" class="cf-in" placeholder="Min. 6 characters"><button class="cf-eye" type="button" onclick="togglePw('reg-pass',this)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+        </div>
+        <button class="cf-btn" id="reg-btn" onclick="handleRegister()"><span>Create Account</span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+        <div class="cf-div"><span>Or sign up with</span></div>
+        <div class="soc-row">
+          <button class="soc-btn" onclick="socialLogin('Google')"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg><span>Google</span></button>
+          <button class="soc-btn" onclick="socialLogin('Facebook')"><svg width="16" height="16" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg><span>Facebook</span></button>
+          <button class="soc-btn" onclick="socialLogin('Twitter')"><svg width="16" height="16" viewBox="0 0 24 24" fill="#1DA1F2"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg><span>Twitter</span></button>
+        </div>
+        <p class="f-footer">Already have an account? <a href="#" class="cf-link" style="font-weight:800" onclick="switchTab('login')">Login</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Social Modal -->
+<div class="soc-modal-bg" id="soc-modal">
+  <div class="soc-modal">
+    <div id="soc-icon" style="font-size:40px"></div>
+    <h3 id="soc-title"></h3>
+    <p>OAuth setup needed (Google/Facebook developer account required). Buttons are UI-ready. For now use email login.<br><br>To connect: add OAuth credentials and callback routes in <code style="background:#f0f4f8;padding:2px 6px;border-radius:4px">routes/auth.js</code>.</p>
+    <button class="soc-modal-btn" onclick="document.getElementById('soc-modal').classList.remove('show')">Got it</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+fetch('/api/auth/session').then(r=>r.json()).then(s=>{
+  if(s.loggedIn) window.location.href=s.role==='admin'?'/admin':'/dashboard';
+});
+function switchTab(t){
+  document.getElementById('form-login').classList.toggle('hidden',t!=='login');
+  document.getElementById('form-register').classList.toggle('hidden',t!=='register');
+  document.getElementById('tab-login').classList.toggle('active',t==='login');
+  document.getElementById('tab-reg').classList.toggle('active',t==='register');
+}
+function togglePw(id,btn){
+  const el=document.getElementById(id);
+  el.type=el.type==='password'?'text':'password';
+  btn.style.color=el.type==='text'?'var(--primary)':'';
+}
+function showErr(id,msg){const el=document.getElementById(id);el.textContent=msg;el.className='cf-alert cf-alert-err';}
+function hideErr(id){document.getElementById(id).className='cf-alert hidden';}
+function socialLogin(p){
+  const i={Google:'🔵',Facebook:'🟦',Twitter:'🐦'};
+  document.getElementById('soc-icon').textContent=i[p]||'🔐';
+  document.getElementById('soc-title').textContent=p+' Login';
+  document.getElementById('soc-modal').classList.add('show');
+}
+document.getElementById('soc-modal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('show');});
+async function handleLogin(){
+  hideErr('login-err');
+  const email=document.getElementById('login-email').value.trim();
+  const pass=document.getElementById('login-pass').value;
+  if(!email||!pass)return showErr('login-err','Please fill in all fields.');
+  const btn=document.getElementById('login-btn');
+  btn.disabled=true;btn.innerHTML='<span>Signing in...</span>';
+  try{
+    const res=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});
+    const d=await res.json();
+    if(!res.ok){showErr('login-err',d.error);btn.disabled=false;btn.innerHTML='<span>Login</span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';return;}
+    window.location.href=d.role==='admin'?'/admin':'/dashboard';
+  }catch(e){showErr('login-err','Network error.');btn.disabled=false;btn.innerHTML='<span>Login</span>';}
+}
+async function handleRegister(){
+  hideErr('reg-err');
+  const name=document.getElementById('reg-name').value.trim();
+  const email=document.getElementById('reg-email').value.trim();
+  const pass=document.getElementById('reg-pass').value;
+  const roll=document.getElementById('reg-roll').value.trim();
+  const dept=document.getElementById('reg-dept').value;
+  const phone=document.getElementById('reg-phone').value.trim();
+  if(!name||!email||!pass)return showErr('reg-err','Name, email and password required.');
+  if(pass.length<6)return showErr('reg-err','Password must be at least 6 characters.');
+  const btn=document.getElementById('reg-btn');
+  btn.disabled=true;btn.innerHTML='<span>Creating...</span>';
+  try{
+    const res=await fetch('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,password:pass,roll_number:roll,department:dept,phone})});
+    const d=await res.json();
+    if(!res.ok){showErr('reg-err',d.error);btn.disabled=false;btn.innerHTML='<span>Create Account</span>';return;}
+    window.location.href='/dashboard';
+  }catch(e){showErr('reg-err','Network error.');btn.disabled=false;btn.innerHTML='<span>Create Account</span>';}
+}
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Enter')return;
+  const lv=!document.getElementById('form-login').classList.contains('hidden');
+  if(lv)handleLogin();else handleRegister();
+});
+</script>
+</body>
+</html>
