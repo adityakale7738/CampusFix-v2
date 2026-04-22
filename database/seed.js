@@ -19,7 +19,7 @@ async function seed() {
     password: process.env.DB_PASSWORD || '',
     database: process.env.DB_NAME     || 'campusfix_db',
     port:     parseInt(process.env.DB_PORT) || 3306,
-    ssl:      { rejectUnauthorized: true }
+    ssl:      { rejectUnauthorized: false }
   });
 
   console.log('✅ Connected!\n');
