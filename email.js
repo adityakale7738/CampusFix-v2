@@ -23,18 +23,41 @@ const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) =>
 function buildHtml({ studentName, complaintId, title, status, adminNote }) {
   const emoji = EMOJIS[status] || '📋';
   const color = COLORS[status] || '#1a73e8';
+  const year = new Date().getFullYear();
+  const appUrl = process.env.APP_URL; // optional: https://your-app.onrender.com
+  const label = 'font-size:11px;color:#8a95a3;text-transform:uppercase;font-weight:700;letter-spacing:.08em';
+  const loginText = appUrl
+    ? `<a href="${esc(appUrl)}" style="color:#4f46e5;text-decoration:none;font-weight:600">Login to CampusFix</a> to view full details.`
+    : 'Login to CampusFix to view full details.';
+
   return `
-  <div style="font-family:'Segoe UI',sans-serif;max-width:520px;margin:auto;border:1px solid #e0e7ef;border-radius:12px;overflow:hidden">
-    <div style="background:#1a73e8;padding:20px;text-align:center">
-      <h2 style="color:#fff;margin:0">🎓 CampusFix</h2>
+  <div style="max-width:560px;margin:24px auto;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08)">
+    <div style="background:#312e81;background:linear-gradient(135deg,#1e1b4b 0%,#4f46e5 100%);padding:34px 24px;text-align:center">
+      <div style="color:#ffffff;font-size:30px;font-weight:800;margin:0">🎓 CampusFix</div>
+      <div style="color:#c7d2fe;font-size:15px;margin-top:8px">Campus Complaint Management System</div>
     </div>
-    <div style="padding:24px">
-      <p>Hi <b>${esc(studentName)}</b>,</p>
-      <p>Your complaint <b>${esc(complaintId)}</b> — <i>${esc(title)}</i> — has been updated to
-        <span style="background:${color}22;color:${color};padding:3px 12px;border-radius:20px;font-weight:700">${emoji} ${esc(status)}</span>
-      </p>
-      ${adminNote ? `<p style="background:#fff8e1;padding:12px;border-radius:8px"><b>Admin note:</b> ${esc(adminNote)}</p>` : ''}
-      <p style="color:#8a95a3;font-size:12px">— CampusFix Team</p>
+    <div style="padding:32px 28px">
+      <p style="color:#5f6b7a;font-size:16px;margin:0 0 18px">Hi <strong style="color:#1a1f36">${esc(studentName)}</strong>,</p>
+      <p style="color:#1a1f36;font-size:20px;margin:0 0 22px">Your complaint status has been updated.</p>
+      <div style="background:#f8faff;border:1px solid #e0e7ef;border-radius:14px;padding:22px">
+        <div style="${label}">Complaint ID</div>
+        <div style="color:#4f46e5;font-size:22px;font-weight:800;margin:4px 0 18px">${esc(complaintId)}</div>
+        <div style="${label}">Title</div>
+        <div style="color:#1a1f36;font-size:17px;margin:4px 0 18px">${esc(title)}</div>
+        <div style="${label}">New Status</div>
+        <div style="margin-top:8px">
+          <span style="display:inline-block;background:${color}22;color:${color};padding:8px 18px;border-radius:24px;font-weight:700;font-size:16px">${emoji} ${esc(status)}</span>
+        </div>
+      </div>
+      ${adminNote ? `
+      <div style="background:#fff8e1;border:1px solid #ffe082;border-radius:12px;padding:16px;margin-top:18px">
+        <div style="font-size:11px;color:#b45309;font-weight:700;text-transform:uppercase;letter-spacing:.08em">Admin Note</div>
+        <div style="color:#1a1f36;font-size:15px;margin-top:6px">${esc(adminNote)}</div>
+      </div>` : ''}
+      <p style="color:#5f6b7a;font-size:16px;margin:26px 0 0">${loginText}</p>
+    </div>
+    <div style="background:#f8faff;border-top:1px solid #e0e7ef;padding:18px;text-align:center">
+      <div style="color:#8a95a3;font-size:12px">© ${year} CampusFix — Campus Complaint Management System</div>
     </div>
   </div>`;
 }
