@@ -1,45 +1,115 @@
+// ------------------------------------------------------------------
+// CampusFix email sender
+//
+// WHY THIS CHANGED:
+//   Render blocks outbound SMTP (ports 25/465/587) on free web services,
+//   so nodemailer + Gmail times out on Render but works on your laptop.
+//   Fix: send through Brevo's HTTPS API (port 443, never blocked).
+//
+// Provider choice (automatic):
+//   - APPS_SCRIPT_URL set -> Google Apps Script relay (free, use on Render)
+//   - BREVO_API_KEY set  -> Brevo HTTPS API   (also fine on Render)
+//   - else EMAIL_USER+PASS -> Gmail SMTP      (works locally only)
+// ------------------------------------------------------------------
 const nodemailer = require('nodemailer');
 
+const EMOJIS = { Pending: '⏳', 'In Progress': '🔧', Resolved: '✅', Rejected: '❌' };
+const COLORS = { Pending: '#f59e0b', 'In Progress': '#3b82f6', Resolved: '#10b981', Rejected: '#ef4444' };
+
+// Escape user-supplied text so titles/notes can't inject HTML into the email
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) =>
+  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+function buildHtml({ studentName, complaintId, title, status, adminNote }) {
+  const emoji = EMOJIS[status] || '📋';
+  const color = COLORS[status] || '#1a73e8';
+  return `
+  <div style="font-family:'Segoe UI',sans-serif;max-width:520px;margin:auto;border:1px solid #e0e7ef;border-radius:12px;overflow:hidden">
+    <div style="background:#1a73e8;padding:20px;text-align:center">
+      <h2 style="color:#fff;margin:0">🎓 CampusFix</h2>
+    </div>
+    <div style="padding:24px">
+      <p>Hi <b>${esc(studentName)}</b>,</p>
+      <p>Your complaint <b>${esc(complaintId)}</b> — <i>${esc(title)}</i> — has been updated to
+        <span style="background:${color}22;color:${color};padding:3px 12px;border-radius:20px;font-weight:700">${emoji} ${esc(status)}</span>
+      </p>
+      ${adminNote ? `<p style="background:#fff8e1;padding:12px;border-radius:8px"><b>Admin note:</b> ${esc(adminNote)}</p>` : ''}
+      <p style="color:#8a95a3;font-size:12px">— CampusFix Team</p>
+    </div>
+  </div>`;
+}
+
+// ---- Provider 0: Google Apps Script relay (100% free, HTTPS, works on Render) ----
+async function sendViaAppsScript({ to, subject, html }) {
+  const res = await fetch(process.env.APPS_SCRIPT_URL, {
+    method: 'POST',
+    redirect: 'follow', // Apps Script answers with a redirect; the mail is already sent by then
+    headers: { 'content-type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ token: process.env.APPS_SCRIPT_TOKEN, to, subject, html }),
+  });
+  const text = await res.text();
+  if (!res.ok || text.trim() !== 'ok') throw new Error(`Apps Script replied: ${text.slice(0, 200)}`);
+}
+
+// ---- Provider 1: Brevo HTTPS API (works on Render free tier) ----
+async function sendViaBrevo({ to, toName, subject, html }) {
+  const senderEmail = process.env.EMAIL_FROM || process.env.EMAIL_USER;
+  if (!senderEmail) throw new Error('Set EMAIL_FROM (a sender verified in Brevo).');
+
+  const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      'api-key': process.env.BREVO_API_KEY,
+      'content-type': 'application/json',
+      accept: 'application/json',
+    },
+    body: JSON.stringify({
+      sender: { name: 'CampusFix', email: senderEmail },
+      to: [{ email: to, name: toName || to }],
+      subject,
+      htmlContent: html,
+    }),
+  });
+  if (!res.ok) throw new Error(`Brevo API ${res.status}: ${await res.text()}`);
+  return res.json();
+}
+
+// ---- Provider 2: Gmail SMTP (local development only) ----
+async function sendViaGmail({ to, subject, html }) {
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: String(process.env.EMAIL_PASS).replace(/\s+/g, ''), // app password: strip spaces
+    },
+    connectionTimeout: 10000, // fail fast instead of hanging when SMTP is blocked
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
+  });
+  return transporter.sendMail({ from: `"CampusFix" <${process.env.EMAIL_USER}>`, to, subject, html });
+}
+
 async function sendStatusUpdateEmail({ to, studentName, complaintId, title, status, adminNote }) {
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    console.log('📧 Email not configured — skipping'); return;
-  }
-  const emojis = { Pending:'⏳', 'In Progress':'🔧', Resolved:'✅', Rejected:'❌' };
-  const colors = { Pending:'#f59e0b', 'In Progress':'#3b82f6', Resolved:'#10b981', Rejected:'#ef4444' };
-  const emoji  = emojis[status] || '📋';
-  const color  = colors[status] || '#1a73e8';
+  const subject = `${EMOJIS[status] || '📋'} Complaint ${complaintId} — ${status}`;
+  const html = buildHtml({ studentName, complaintId, title, status, adminNote });
+
   try {
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
-    });
-    await transporter.sendMail({
-      from: `"CampusFix" <${process.env.EMAIL_USER}>`,
-      to,
-      subject: `${emoji} Complaint ${complaintId} — Status: ${status}`,
-      html: `
-      <div style="max-width:560px;margin:40px auto;font-family:'Segoe UI',sans-serif;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08)">
-        <div style="background:#1a73e8;padding:28px;text-align:center">
-          <h1 style="color:#fff;margin:0;font-size:22px;font-weight:800">🎓 CampusFix</h1>
-          <p style="color:rgba(255,255,255,.7);margin:6px 0 0;font-size:13px">Campus Complaint Management</p>
-        </div>
-        <div style="padding:28px">
-          <p style="color:#5f6b7a;font-size:14px">Hi <strong style="color:#1a1f36">${studentName}</strong>,</p>
-          <p style="color:#1a1f36;font-size:15px">Your complaint status has been updated.</p>
-          <div style="background:#f8faff;border-radius:10px;padding:18px;margin:18px 0;border:1px solid #e0e7ef">
-            <p style="margin:0 0 10px"><span style="font-size:10px;color:#8a95a3;text-transform:uppercase;font-weight:700;letter-spacing:.06em">Complaint ID</span><br><strong style="color:#1a73e8;font-size:15px">${complaintId}</strong></p>
-            <p style="margin:0 0 10px"><span style="font-size:10px;color:#8a95a3;text-transform:uppercase;font-weight:700;letter-spacing:.06em">Title</span><br><span style="color:#1a1f36">${title}</span></p>
-            <p style="margin:0"><span style="font-size:10px;color:#8a95a3;text-transform:uppercase;font-weight:700;letter-spacing:.06em">New Status</span><br><span style="background:${color}22;color:${color};padding:4px 14px;border-radius:20px;font-weight:700;font-size:13px;display:inline-block;margin-top:5px">${emoji} ${status}</span></p>
-          </div>
-          ${adminNote ? `<div style="background:#fff8e1;border:1px solid #ffe082;border-radius:10px;padding:14px"><p style="margin:0;font-size:10px;color:#b45309;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Admin Note</p><p style="margin:6px 0 0;color:#1a1f36;font-size:14px">${adminNote}</p></div>` : ''}
-        </div>
-        <div style="background:#f8faff;padding:16px;text-align:center;border-top:1px solid #e0e7ef">
-          <p style="color:#8a95a3;font-size:11px;margin:0">© 2024 CampusFix — Campus Complaint Management System</p>
-        </div>
-      </div>`
-    });
-    console.log(`📧 Email sent to ${to}`);
-  } catch(err) { console.error('📧 Email error:', err.message); }
+    if (process.env.APPS_SCRIPT_URL) {
+      await sendViaAppsScript({ to, subject, html });
+      console.log(`📧 Email sent via Google Apps Script to ${to}`);
+    } else if (process.env.BREVO_API_KEY) {
+      await sendViaBrevo({ to, toName: studentName, subject, html });
+      console.log(`📧 Email sent via Brevo to ${to}`);
+    } else if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+      await sendViaGmail({ to, subject, html });
+      console.log(`📧 Email sent via Gmail SMTP to ${to}`);
+    } else {
+      console.log('📧 Email not configured (no BREVO_API_KEY / EMAIL_USER) — skipping');
+    }
+  } catch (err) {
+    // Never crash the request because of email; but DO log the real reason
+    console.error('📧 Email FAILED:', err.message);
+  }
 }
 
 module.exports = { sendStatusUpdateEmail };
